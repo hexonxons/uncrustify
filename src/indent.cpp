@@ -1662,10 +1662,32 @@ void indent_text(void)
          if (  cpd.settings[UO_indent_class_colon].b
             && pc->type == CT_CLASS_COLON)
          {
+            prev = chunk_get_prev(pc);
+            if (chunk_is_newline(prev))
+            {
+                frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_class_base_leading].u;
+                log_indent();
+            }
+
             if (cpd.settings[UO_indent_class_on_colon].b)
             {
                frm.pse[frm.pse_tos].indent = pc->column;
                log_indent();
+            }
+            else if (cpd.settings[UO_indent_class_base].n != 0)
+            {
+                /*
+                 * If the std::max() calls were specialized with size_t (the type of the underlying variable),
+                 * they would never actually do their job, because size_t is unsigned and therefore even
+                 * a "negative" result would be always greater than zero.
+                 * Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
+                 */
+                frm.pse[frm.pse_tos].indent = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_class_base].n, 0);
+                log_indent();
+                frm.pse[frm.pse_tos].indent_tmp = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent_tmp + cpd.settings[UO_indent_class_base].n, 0);
+                frm.pse[frm.pse_tos].indent_tab = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent_tab + cpd.settings[UO_indent_class_base].n, 0);
+                log_indent_tmp();
+                indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
             }
             else
             {

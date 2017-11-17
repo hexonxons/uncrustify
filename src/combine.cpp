@@ -1378,16 +1378,18 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          || pc->type == CT_ANGLE_CLOSE
          || pc->type == CT_SQUARE_CLOSE
          || pc->type == CT_TSQUARE
-         || (  pc->type == CT_BRACE_OPEN
+         || (  (pc->type == CT_BRACE_OPEN || pc->type == CT_FPAREN_OPEN)
             && (  pc->parent_type == CT_NONE
-               || pc->parent_type == CT_BRACED_INIT_LIST)))
+               || pc->parent_type == CT_BRACED_INIT_LIST
+               || pc->parent_type == CT_FUNC_CTOR_VAR)))
       {
          auto brace_open = chunk_get_next_ncnl(pc);
          if (  brace_open != nullptr
             && brace_open->type == CT_BRACE_OPEN
             && (  brace_open->parent_type == CT_NONE
                || brace_open->parent_type == CT_ASSIGN
-               || brace_open->parent_type == CT_BRACED_INIT_LIST))
+               || brace_open->parent_type == CT_BRACED_INIT_LIST
+               || brace_open->parent_type == CT_FUNC_CLASS_DEF))
          {
             auto brace_close = chunk_skip_to_match(next);
             if (brace_close != nullptr && brace_close->type == CT_BRACE_CLOSE)

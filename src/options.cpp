@@ -781,6 +781,11 @@ void register_options(void)
    unc_add_option("indent_class_on_colon", UO_indent_class_on_colon, AT_BOOL,
                   "Indent based on a class colon instead of the stuff after the colon.\n"
                   "Requires indent_class_colon=True. Default=False.");
+   unc_add_option("indent_class_base_leading", UO_indent_class_base_leading, AT_UNUM,
+                  "Virtual indent from the ':' for base classes list. Default=2.");
+   unc_add_option("indent_class_base", UO_indent_class_base, AT_NUM,
+                  "Additional indent for base classes list.\n"
+                  "Negative values decrease indent down to the first column. Default=0.");
    unc_add_option("indent_constr_colon", UO_indent_constr_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class initializer colon.");
    unc_add_option("indent_ctor_init_leading", UO_indent_ctor_init_leading, AT_UNUM,
